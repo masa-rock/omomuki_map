@@ -210,12 +210,12 @@ export const SearchMapSection = () => {
             {tags?.map((val) => {
               return(
                 <CheckBoxButton className="check-box-button" id={val.id} checkedItems={checkedItems}>
-                  <label htmlFor={`search_map_tag_id_${val.id}`} key = {`search_map_tag_key_${val.id}`}>
+                  <label htmlFor={`search_map_tag_id_${val.id}`} key = {`search_map_tag_key_${val.id}`} className = {"checkbox_cover_parent_component"}>
                     <CheckBox
                       id = {`search_map_tag_id_${val.id}`}
                       value = {val.id}
                       onChange = {checkboxChange}
-                      checked = {checkedItems.includes(`${val.id}`)}
+                      checked = {checkedItems.includes(`${val.id}`)}                      
                     />
                     {val.name}
                   </label>
@@ -283,7 +283,6 @@ const CheckBoxButton = styled.div`
   font-size:16px;
   cursor: pointer;
   border:1px solid #3f51b5;
-  padding: 5px;
   border-radius:3px;
   margin:2px;
   background-color: ${props => props.checkedItems.includes(String(props.id)) ? '#3f51b5' : '#fff' };
