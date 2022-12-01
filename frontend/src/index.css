@@ -44,6 +44,10 @@ h3 { font-size: 1.17em; margin: .83em 0 }
   width: 80%;
 }
 
+.opacity_zero{
+  opacity: 0;
+}
+
 /* top_page */
 .region-select-container{
   min-width: 200px;

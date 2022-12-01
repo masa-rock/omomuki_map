@@ -19,15 +19,19 @@ export const SearchMapSection = () => {
   const [tags, setTags] = useState([])
   const [checkedItems, setCheckedItems] = useState([])
   const navigate = useNavigate()
-  const { isMobileSite, isTabletSite, isPcSite } = useContext(MediaQueryContext)
+  const { isPcSite } = useContext(MediaQueryContext)
   const { ref, inView } = useInView({
-    rootMargin: '-50px',
+    rootMargin: '-300px',
     triggerOnce: true
   })
-
-  const selectCenter = {
-    lat: initialLat, 
+  
+  const initialCenter = {
+    lat: initialLat,
     lng: initialLng
+  }
+  
+  const checkedTag = {
+    tags: checkedItems
   }
 
   const region = {
@@ -58,9 +62,6 @@ export const SearchMapSection = () => {
       })
   },[])
   
-  const checkedTag = {
-    tags: checkedItems
-  }
 
   const StarRating = (props) => {
     const total_review = props.props.length
@@ -143,7 +144,7 @@ export const SearchMapSection = () => {
   const HandleCenterChanged = () => {
   }
 
-  const center = useMemo(() => (selectCenter), [selectCenter]);
+  const center = useMemo(() => (initialCenter), [initialCenter]);
   const new_zoom = useMemo(() => zoom, [zoom])
   const updateMapTag = useMemo(() => {
       const params = checkedTag
@@ -169,8 +170,8 @@ export const SearchMapSection = () => {
     }
 
   return(
-    <SearchMapContainer>
-      <MapContainer className="animate__animated animate__fadeInUp">        
+    <SearchMapContainer ref={ref}>
+      <MapContainer className= {inView ? "animate__animated animate__fadeInUp" : "opacity_zero"}>        
         <LoadScript googleMapsApiKey="AIzaSyAWyQfXaQA7ITensdfjr7MOt081KlrKLec">
           <GoogleMap
             mapContainerStyle={mapContainerSize()}
@@ -182,7 +183,7 @@ export const SearchMapSection = () => {
           </GoogleMap>
         </LoadScript>
       </MapContainer>
-      <MapContext ref={ref} inView={inView} className="animate__animated animate__fadeInUp">
+      <MapContext className = {inView ? "animate__animated animate__fadeInUp" : "opacity_zero"}>
         <p>地域からスポットを探す</p>
         <div className = "region-select-container">
           <FormControl className = "region-select-box">
