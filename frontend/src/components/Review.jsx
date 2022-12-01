@@ -3,7 +3,7 @@ import { TextField, Card } from "@material-ui/core";
 import { Typography, CardMedia, Rating } from "@mui/material";
 import Button from '@material-ui/core/Button';
 import { useState, useMemo, useContext } from "react";
-import {useModal} from 'react-hooks-use-modal';
+import { useModal } from 'react-hooks-use-modal';
 import { AuthContext } from '../App';
 import { FlagContext } from './SpotSinglePage'
 import client from "../apis/client";

@@ -48,6 +48,10 @@ h3 { font-size: 1.17em; margin: .83em 0 }
   opacity: 0;
 }
 
+.animation_slow_display{
+  animation-duration: 4s;
+}
+
 /* top_page */
 .region-select-container{
   min-width: 200px;

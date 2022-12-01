@@ -59,9 +59,8 @@ export const Search = () => {
   }
 
   return(
-    <TopContainer>
-      <MainMessage
-       className="animate__animated animate__fadeInUp">
+    <TopContainer className="animate__animated animate__fadeInUp">      
+      <MainMessage>      
         趣のある場所へ<br/>出かけよう
       </MainMessage>
       <Paper
@@ -69,8 +68,7 @@ export const Search = () => {
           p: "40px",
           width: {lg:"30%"},
           m: {lg:"200px 0"}
-        }}
-        className = "animate__animated animate__fadeIn"
+        }}        
         >
         <Subject>
           <h4>スポットを探す</h4>
@@ -117,6 +115,7 @@ export const Search = () => {
 }
 
 const TopContainer = styled.div`
+  animation-duration: 3s;
 ${media.greaterThan("large")`  
   display: flex;
   align-items: center;
@@ -127,6 +126,7 @@ ${media.greaterThan("large")`
 const MainMessage = styled.div`
 color: #fff;
 font-family: 'Shippori Mincho', serif;
+animation-duration: 2s;
 ${media.lessThan("large")`
 margin-bottom: 10px;
 font-size: 20px;

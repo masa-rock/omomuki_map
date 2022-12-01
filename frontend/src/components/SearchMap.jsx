@@ -169,7 +169,7 @@ export const SearchMapSection = () => {
 
   return(
     <SearchMapContainer ref={ref}>
-      <MapContainer className= {inView ? "animate__animated animate__fadeInUp" : "opacity_zero"}>        
+      <MapContainer className= {inView ? "animate__animated animate__fadeInUp" : "opacity_zero"}>
         <LoadScript googleMapsApiKey="AIzaSyAWyQfXaQA7ITensdfjr7MOt081KlrKLec">
           <GoogleMap
             mapContainerStyle={mapContainerSize()}
@@ -246,6 +246,7 @@ const SearchMapContainer = styled.div`
 
 const MapContainer = styled.div`
   width: 50%;
+  animation-duration: 4s;
   ${media.lessThan("medium")`
     width: 100%;
   `}
@@ -255,6 +256,7 @@ const MapContext = styled.div`
   width: 40%;
   padding: 30px;
   margin: auto 0;
+  animation-duration: 3s;
   ${media.lessThan("medium")`
     width: inherit;
   `}
