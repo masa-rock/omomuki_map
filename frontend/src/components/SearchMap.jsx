@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useMemo, useContext } from "react";
-import axios from 'axios';
-import { LoadScript, GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { Rating } from "@mui/material";
-import { useInView } from 'react-intersection-observer';
-import { useNavigate } from 'react-router-dom';
-import { MediaQueryContext } from './Provider/MediaQueryProvider';
+import React, { useEffect, useState, useMemo, useContext } from "react"
+import axios from 'axios'
+import { LoadScript, GoogleMap, Marker, InfoWindow } from '@react-google-maps/api'
+import { Select, MenuItem, FormControl, InputLabel, Rating } from "@mui/material"
+import { useInView } from 'react-intersection-observer'
+import { useNavigate } from 'react-router-dom'
+import { MediaQueryContext } from './Provider/MediaQueryProvider'
 import media from "styled-media-query"
-import styled from 'styled-components';
-import 'animate.css';
+import styled from 'styled-components'
+import 'animate.css'
 
 export const SearchMapSection = () => {
   const [spots, setSpots] = useState([])
@@ -31,7 +30,7 @@ export const SearchMapSection = () => {
     lng: initialLng
   }
 
-  const region ={
+  const region = {
     1:{lat: 43.439734, lng: 142.644880, zoom: 7},
     2:{lat: 38.945414, lng: 140.618773, zoom: 7.2},
     3:{lat: 36.074958, lng: 139.697900, zoom: 8.2},
@@ -45,10 +44,10 @@ export const SearchMapSection = () => {
   useEffect(() => {
       axios.get("http://0.0.0.0:3001/api/v1/posts")
       .then(resp =>{
-        setSpots(resp.data.posts);
+        setSpots(resp.data.posts)
       })
       .catch(e => {
-        console.log(e.response);
+        console.log(e.response)
       })
       axios.get("http://0.0.0.0:3001/api/v1/tag")
       .then(resp => {
@@ -64,7 +63,6 @@ export const SearchMapSection = () => {
   }
 
   const StarRating = (props) => {
-    console.log(props)
     const total_review = props.props.length
     const average_review = props.props.reduce((sum, i) => sum + i.rate, 0)/total_review;
     const average_review_result = average_review ? average_review : 0
