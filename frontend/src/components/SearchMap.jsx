@@ -147,11 +147,9 @@ export const SearchMapSection = () => {
   const center = useMemo(() => (initialCenter), [initialCenter]);
   const new_zoom = useMemo(() => zoom, [zoom])
   const updateMapTag = useMemo(() => {
-      const params = checkedTag
-      console.log(params)
-      axios.get("http://0.0.0.0:3001/api/v1/posts", {params: params})
+      axios.get("http://0.0.0.0:3001/api/v1/posts", {params: checkedTag})
       .then(resp => {
-        setSpots(resp.data.posts);      
+        setSpots(resp.data.posts);
       })
       .catch( e => {
         console.log(e.response);
