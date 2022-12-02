@@ -1,15 +1,15 @@
-import { Paper, TextField } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
-import axios from 'axios';
-import { useState, useEffect } from "react";
+import { Paper, TextField } from "@mui/material"
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+import Button from '@material-ui/core/Button'
+import axios from 'axios'
+import { useState, useEffect } from "react"
 import { Scrollbars } from 'rc-scrollbars'
-import 'animate.css';
+import 'animate.css'
 import media from "styled-media-query"
 
 export const Search = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [keyword, setKeyword] = useState()
   const [tags, setTags] = useState([])
   const [checkedItems, setCheckedItems] = useState([])
@@ -27,47 +27,43 @@ export const Search = () => {
   const CheckBox = ({id, value, checked, onChange}) => {
     return(
       <input
-      id={id}
-      type="checkbox"
-      name="inputNames"
-      checked={checked}
-      onChange={onChange}
-      value={value}
+      id = {id}
+      type = "checkbox"
+      name = "inputNames"
+      checked = {checked}
+      onChange = {onChange}
+      value = {value}
     />
     )
   }
 
-  const generateParams = () => {
-    const search = {
-      tags: checkedItems,
-      keyword: keyword 
-    }
-    return search
-  }
+  const searchParams = {
+    tags: checkedItems,
+    keyword: keyword 
+  }  
 
   const checkboxChange = e => {
     if(checkedItems.includes(e.target.value)){
-      setCheckedItems(checkedItems.filter(item => item !== e.target.value));
+      setCheckedItems(checkedItems.filter(item => item !== e.target.value))
     }else{
-      setCheckedItems([...checkedItems, e.target.value]);
+      setCheckedItems([...checkedItems, e.target.value])
     }
   }
 
   const SearchSpot = () => {
-    const params = generateParams();
-    navigate(`/spot/list`, {state: {params: params}})
+    navigate(`/spot/list`, { state: { params: searchParams } })
   }
 
   return(
-    <TopContainer className="animate__animated animate__fadeInUp">      
+    <TopContainer className = "animate__animated animate__fadeInUp">      
       <MainMessage>      
         趣のある場所へ<br/>出かけよう
       </MainMessage>
       <Paper
         sx = {{
           p: "40px",
-          width: {lg:"30%"},
-          m: {lg:"200px 0"}
+          width: {lg: "30%"},
+          m: {lg: "200px 0"}
         }}        
         >
         <Subject>
@@ -90,8 +86,8 @@ export const Search = () => {
             <CheckBoxButtons>
               {tags?.map((val) => {
                 return(
-                  <CheckBoxButton id={val.id} checkedItems={checkedItems}>
-                    <label htmlFor={`id_${val.id}`} key = {`key_${val.id}`}>
+                  <CheckBoxButton id = {val.id} checkedItems = {checkedItems}>
+                    <label htmlFor = {`id_${ val.id }`} key = {`key_${ val.id }`}>
                       <CheckBox
                         id = {`id_${val.id}`}
                         value = {val.id}
