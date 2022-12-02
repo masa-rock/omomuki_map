@@ -15,12 +15,12 @@ export const SearchMapSection = () => {
   const [key, setKey] = useState(0)
   const [initialLat, setInitialLat] = useState(35.30486957565305)
   const [initialLng, setInitialLng] = useState(136.9142007392334)
-  const [zoom, setZoom] =useState(9.5)
+  const [zoom, setZoom] = useState(9.5)
   const [tags, setTags] = useState([])
   const [checkedItems, setCheckedItems] = useState([])
   const navigate = useNavigate()
-  const { isPcSite } = useContext(MediaQueryContext)
-  const { ref, inView } = useInView({
+  const {isPcSite} = useContext(MediaQueryContext)
+  const {ref, inView} = useInView({
     rootMargin: '-300px',
     triggerOnce: true
   })
@@ -65,12 +65,12 @@ export const SearchMapSection = () => {
 
   const StarRating = (props) => {
     const total_review = props.props.length
-    const average_review = props.props.reduce((sum, i) => sum + i.rate, 0)/total_review;
+    const average_review = props.props.reduce((sum, i) => sum + i.rate, 0)/total_review
     const average_review_result = average_review ? average_review : 0
     return (
       <>
         <Rating
-         value={average_review_result}
+         value = {average_review_result}
          precision = {0.1}
          readOnly = {true}
           />
@@ -81,9 +81,9 @@ export const SearchMapSection = () => {
   
   const checkboxChange = e => {
     if(checkedItems.includes(e.target.value)){
-      setCheckedItems(checkedItems.filter(item => item !== e.target.value));
+      setCheckedItems(checkedItems.filter(item => item !== e.target.value))
     }else{
-      setCheckedItems([...checkedItems, e.target.value]);
+      setCheckedItems([...checkedItems, e.target.value])
     }
   }
 
@@ -109,9 +109,9 @@ export const SearchMapSection = () => {
       spots.map((val) => (
         <>
           <Marker 
-            key={val.id} 
-            position={{lat:val.lat, lng:val.lng}}
-            onMouseOver={() => {
+            key = {val.id} 
+            position = {{lat:val.lat, lng:val.lng}}
+            onMouseOver = {() => {
               setSelect("on")
               setKey(val.id)
             }}
@@ -144,15 +144,15 @@ export const SearchMapSection = () => {
   const HandleCenterChanged = () => {
   }
 
-  const center = useMemo(() => (initialCenter), [initialCenter]);
+  const center = useMemo(() => (initialCenter), [initialCenter])
   const new_zoom = useMemo(() => zoom, [zoom])
   const updateMapTag = useMemo(() => {
       axios.get("http://0.0.0.0:3001/api/v1/posts", {params: checkedTag})
       .then(resp => {
-        setSpots(resp.data.posts);
+        setSpots(resp.data.posts)
       })
       .catch( e => {
-        console.log(e.response);
+        console.log(e.response)
       })
     },[checkedItems])
 
@@ -168,14 +168,14 @@ export const SearchMapSection = () => {
     }
 
   return(
-    <SearchMapContainer ref={ref}>
-      <MapContainer className= {inView ? "animate__animated animate__fadeInUp" : "opacity_zero"}>
-        <LoadScript googleMapsApiKey="AIzaSyAWyQfXaQA7ITensdfjr7MOt081KlrKLec">
+    <SearchMapContainer ref = {ref}>
+      <MapContainer className = {inView ? "animate__animated animate__fadeInUp" : "opacity_zero"}>
+        <LoadScript googleMapsApiKey = "AIzaSyAWyQfXaQA7ITensdfjr7MOt081KlrKLec">
           <GoogleMap
-            mapContainerStyle={mapContainerSize()}
-            center={center} 
-            zoom={new_zoom}
-            onCenterChanged ={HandleCenterChanged}
+            mapContainerStyle = {mapContainerSize()}
+            center = {center} 
+            zoom = {new_zoom}
+            onCenterChanged = {HandleCenterChanged}
             >
             <MarkerMap/>
           </GoogleMap>
@@ -185,22 +185,22 @@ export const SearchMapSection = () => {
         <p>地域からスポットを探す</p>
         <div className = "region-select-container">
           <FormControl className = "region-select-box">
-            <InputLabel id="region">地域を選択する</InputLabel>
+            <InputLabel id = "region">地域を選択する</InputLabel>
             <Select
-                  labelid= "region"
-                  label= "地域"
-                  name= "region"
-                  onChange={(e) => regionSelect(e.target.value)}
+                  labelid = "region"
+                  label = "地域"
+                  name = "region"
+                  onChange = {(e) => regionSelect(e.target.value)}
                 >
-                <MenuItem value={0}>未選択</MenuItem>
-                <MenuItem value={1}>北海道</MenuItem>
-                <MenuItem value={2}>東北</MenuItem>
-                <MenuItem value={3}>関東</MenuItem>
-                <MenuItem value={4}>中部</MenuItem>
-                <MenuItem value={5}>近畿</MenuItem>
-                <MenuItem value={6}>中国・四国</MenuItem>
-                <MenuItem value={7}>九州</MenuItem>
-                <MenuItem value={8}>沖縄</MenuItem>
+                <MenuItem value = {0}>未選択</MenuItem>
+                <MenuItem value = {1}>北海道</MenuItem>
+                <MenuItem value = {2}>東北</MenuItem>
+                <MenuItem value = {3}>関東</MenuItem>
+                <MenuItem value = {4}>中部</MenuItem>
+                <MenuItem value = {5}>近畿</MenuItem>
+                <MenuItem value = {6}>中国・四国</MenuItem>
+                <MenuItem value = {7}>九州</MenuItem>
+                <MenuItem value = {8}>沖縄</MenuItem>
               </Select>
           </FormControl>
           <SearchMapTag>
@@ -208,8 +208,8 @@ export const SearchMapSection = () => {
             <div className = "check-box-buttons">
             {tags?.map((val) => {
               return(
-                <CheckBoxButton className="check-box-button" id={val.id} checkedItems={checkedItems}>
-                  <label htmlFor={`search_map_tag_id_${val.id}`} key = {`search_map_tag_key_${val.id}`} className = {"checkbox_cover_parent_component"}>
+                <CheckBoxButton className = "check-box-button" id = {val.id} checkedItems = {checkedItems}>
+                  <label htmlFor = {`search_map_tag_id_${val.id}`} key = {`search_map_tag_key_${val.id}`} className = {"checkbox_cover_parent_component"}>
                     <CheckBox
                       id = {`search_map_tag_id_${val.id}`}
                       value = {val.id}
