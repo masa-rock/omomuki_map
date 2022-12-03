@@ -3,11 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+// import Snackbar from '@material-ui/core/Snackbar'
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styled from 'styled-components';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation, withRouter } from "react-router-dom";
 import { AuthContext } from '../../App';
 import { signOut } from '../../apis/auth';
 import Cookies from 'js-cookie';
@@ -32,6 +33,9 @@ export default function ButtonAppBar() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [flashMessage, setFlashMessage] = useState("aaa")
+  const location = useLocation()
+  console.log(location)
 
   const handleSignOut = async (e) => {
     e.preventDefault();
@@ -44,7 +48,7 @@ export default function ButtonAppBar() {
         Cookies.remove("_uid")
 
         setIsSignedIn(false)
-        navigate("/")
+        navigate("/", {state: {flash_message: "ログアウトしました", response: "succeess"}})
         console.log("Succeeded in sign out")
       } else {
         console.log("Failed in sign out")
@@ -101,32 +105,51 @@ export default function ButtonAppBar() {
     )
   }
 
+  const FlashMessage = () => {
+    console.log(location.state)
+    if(location.state === undefined || location.state === null){
+      setFlashMessage("")
+    }else{
+      console.log(location.state.flash_message)
+      setFlashMessage(location.state.flash_message)
+      return(
+        location.state.response = "succeed" ? 
+        <FlashMessageStyle response = {location.state.response}> {flashMessage} </FlashMessageStyle> : 
+        <FlashMessageStyle response = {location.state.response}> aaa </FlashMessageStyle>
+        
+      )
+    }
+  }
+
   return (
-    <div className={classes.root}>
-      <AppBar position="fixed">
-        <Toolbar>
-          {isMobileSite &&(
-          <>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={sidebarOpenBtn} >
-              <MenuIcon />
-              <Sidebar
-                sidebar = {sideBarContainer()}
-                open = {sidebarOpen}
-                styles={{ sidebar: { background: "gray", width: "200px", position:"fixed" } }}      
-                >
-                </Sidebar>
-            </IconButton>
-          </>
-          )}
-          <Typography variant="p" className={classes.title}>
-            趣map
-          </Typography>
-          {(isPcSite || isTabletSite)&&(
-            <AuthButtons />
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
+    <>
+      <div className={classes.root}>
+        <AppBar position="fixed">
+          <Toolbar>
+            {isMobileSite &&(
+            <>
+              <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={sidebarOpenBtn} >
+                <MenuIcon />
+                <Sidebar
+                  sidebar = {sideBarContainer()}
+                  open = {sidebarOpen}
+                  styles={{ sidebar: { background: "gray", width: "200px", position:"fixed" } }}      
+                  >
+                  </Sidebar>
+              </IconButton>
+            </>
+            )}
+            <Typography variant="p" className={classes.title}>
+              趣map
+            </Typography>
+            {(isPcSite || isTabletSite)&&(
+              <AuthButtons />
+            )}
+          </Toolbar>
+          <FlashMessage/>
+        </AppBar>
+      </div>
+    </>
   );
 }
 
@@ -135,4 +158,9 @@ const SidebarContainerStyle = styled.div`
   &&& a{
     display: block;
   }
+`
+
+const FlashMessageStyle = styled.p`
+  font-size: 8px;
+  background-color: ${props => props.response = "success" ? "#7bc890" : "#dc3545" }
 `
