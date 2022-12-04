@@ -30,7 +30,7 @@ export const EditProfile = () =>{
   const handleSignInSubmit = async (e) => {
     e.preventDefault()
     const params = generateParams()    
-    axios.patch(`http://0.0.0.0:3001/api/v1/users/${currentUser.id}`, {params: currentUser, data: params})
+    axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/v1/users/${currentUser.id}`, {params: currentUser, data: params})
     .then(resp => {
       setCurrentUser(resp.data.current_user)
       navigate(``, {state: {flash_message: "プロフィールの更新に成功しました", response: "success"}} )

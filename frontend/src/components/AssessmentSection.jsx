@@ -22,7 +22,7 @@ export const AssessmentSection = () => {
   })
 
   useEffect(() => {
-    axios.get("http://0.0.0.0:3001/api/v1/posts/assessment")
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/assessment`)
     .then(resp =>{
       setSpots(resp.data);
     })

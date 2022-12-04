@@ -39,7 +39,7 @@ export const SignIn = (e) => {
 
         console.log(Cookies.get())
 
-        navigate(-1)
+        navigate(-1, {state: {flash_message: "ログインに成功しました。"}})
       }
     } catch (e){
       console.log(e);

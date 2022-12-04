@@ -21,7 +21,7 @@ export const SearchMapSection = () => {
   const navigate = useNavigate()
   const {isPcSite} = useContext(MediaQueryContext)
   const {ref, inView} = useInView({
-    rootMargin: '-300px',
+    rootMargin: '-50px',
     triggerOnce: true
   })
   
@@ -46,14 +46,7 @@ export const SearchMapSection = () => {
   }
 
   useEffect(() => {
-      axios.get("http://0.0.0.0:3001/api/v1/posts")
-      .then(resp =>{
-        setSpots(resp.data.posts)
-      })
-      .catch(e => {
-        console.log(e.response)
-      })
-      axios.get("http://0.0.0.0:3001/api/v1/tag")
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/tag`)
       .then(resp => {
         setTags(resp.data)
       })
@@ -88,7 +81,7 @@ export const SearchMapSection = () => {
   }
 
   const ToSinglePage = (id) => {
-    navigate(`/spot/${id}`,{id: id})
+    navigate(`/spot/${id}`, {id: id})
   }
 
   const CheckBox = ({id, value, checked, onChange}) => {
@@ -147,7 +140,7 @@ export const SearchMapSection = () => {
   const center = useMemo(() => (initialCenter), [initialCenter])
   const new_zoom = useMemo(() => zoom, [zoom])
   const updateMapTag = useMemo(() => {
-      axios.get("http://0.0.0.0:3001/api/v1/posts", {params: checkedTag})
+      axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts`, {params: checkedTag})
       .then(resp => {
         setSpots(resp.data.posts)
       })
@@ -187,21 +180,21 @@ export const SearchMapSection = () => {
           <FormControl className = "region-select-box">
             <InputLabel id = "region">地域を選択する</InputLabel>
             <Select
-                  labelid = "region"
-                  label = "地域"
-                  name = "region"
-                  onChange = {(e) => regionSelect(e.target.value)}
-                >
-                <MenuItem value = {0}>未選択</MenuItem>
-                <MenuItem value = {1}>北海道</MenuItem>
-                <MenuItem value = {2}>東北</MenuItem>
-                <MenuItem value = {3}>関東</MenuItem>
-                <MenuItem value = {4}>中部</MenuItem>
-                <MenuItem value = {5}>近畿</MenuItem>
-                <MenuItem value = {6}>中国・四国</MenuItem>
-                <MenuItem value = {7}>九州</MenuItem>
-                <MenuItem value = {8}>沖縄</MenuItem>
-              </Select>
+              labelid = "region"
+              label = "地域"
+              name = "region"
+              onChange = {(e) => regionSelect(e.target.value)}
+            >
+              <MenuItem value = {0}>未選択</MenuItem>
+              <MenuItem value = {1}>北海道</MenuItem>
+              <MenuItem value = {2}>東北</MenuItem>
+              <MenuItem value = {3}>関東</MenuItem>
+              <MenuItem value = {4}>中部</MenuItem>
+              <MenuItem value = {5}>近畿</MenuItem>
+              <MenuItem value = {6}>中国・四国</MenuItem>
+              <MenuItem value = {7}>九州</MenuItem>
+              <MenuItem value = {8}>沖縄</MenuItem>
+            </Select>
           </FormControl>
           <SearchMapTag>
             <h5>タグで絞り込む</h5>

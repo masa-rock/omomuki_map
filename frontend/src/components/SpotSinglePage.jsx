@@ -59,8 +59,8 @@ export const SpotSinglePage = () => {
   
   useEffect(() => {
     async function fetchData(){
-    const getSpot = await axios.get(`http://0.0.0.0:3001/api/v1/posts/${params.id}`)
-    const getReviews = await axios.get(`http://0.0.0.0:3001/api/v1/posts/review_data/${params.id}`)
+    const getSpot = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/${params.id}`)
+    const getReviews = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/review_data/${params.id}`)
     setPost(getSpot.data.post)
     setPostId(getSpot.data.post.id)
     setName(getSpot.data.post.name)
@@ -98,7 +98,7 @@ export const SpotSinglePage = () => {
 
   const dataDelete = (delete_id) => {
     if (window.confirm("投稿を削除しますがよろしいでしょうか")){
-      axios.delete(`http://0.0.0.0:3001/api/v1/posts/${delete_id}`)
+      axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/${delete_id}`)
       .then(
         navigate("/spot/list")
       )
@@ -147,7 +147,7 @@ export const SpotSinglePage = () => {
     console.log(wantToGoDataId)
     if (wantToGoUserId.includes(uid)){
       try{
-        axios.delete(`http://0.0.0.0:3001/api/v1/want_to_goes/${wantToGoDataId}`)
+        axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/v1/want_to_goes/${wantToGoDataId}`)
         setIconColor("#d3d3d3")
         setWantToGoUserId([])
       }catch(e){
@@ -155,7 +155,7 @@ export const SpotSinglePage = () => {
       }
     }else{
       try{
-        axios.post(`http://0.0.0.0:3001/api/v1/want_to_goes`, wantToGoParams)
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/want_to_goes`, wantToGoParams)
         setIconColor("#B2D235")
       }catch(e){
         console.log(e)

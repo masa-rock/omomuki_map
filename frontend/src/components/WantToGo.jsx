@@ -13,7 +13,7 @@ export const WantToGo = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    axios.get("http://0.0.0.0:3001/api/v1/want_to_goes", {params: {user_id: currentUser.id}})
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/want_to_goes`, {params: {user_id: currentUser.id}})
     .then(resp => {
       setPost(resp.data.posts)
     })
