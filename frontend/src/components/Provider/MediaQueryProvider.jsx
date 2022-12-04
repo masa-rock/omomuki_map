@@ -1,4 +1,4 @@
-import React, { Children, createContext, useContext, useMemo } from 'react';
+import React, { createContext, useMemo } from 'react';
 import useMedia from 'use-media';
 
 const mediaQueries = {
