@@ -1,19 +1,18 @@
-import React,{ useContext, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-// import Snackbar from '@material-ui/core/Snackbar'
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import styled from 'styled-components';
-import { Link, useNavigate, useLocation, withRouter } from "react-router-dom";
-import { AuthContext } from '../../App';
-import { signOut } from '../../apis/auth';
-import Cookies from 'js-cookie';
-import Sidebar from 'react-sidebar';
-import { MediaQueryContext } from '../Provider/MediaQueryProvider';
+import React,{ useContext, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import styled from 'styled-components'
+import { Link, useNavigate, useLocation } from "react-router-dom"
+import { AuthContext } from '../../App'
+import { signOut } from '../../apis/auth'
+import Cookies from 'js-cookie'
+import Sidebar from 'react-sidebar'
+import { MediaQueryContext } from '../Provider/MediaQueryProvider'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,24 +24,22 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
-}));
+}))
 
 export default function ButtonAppBar() {
-  const {setIsSignedIn, isSignedIn, currentUser, loading} = useContext(AuthContext);
+  const {setIsSignedIn, isSignedIn, currentUser, loading} = useContext(AuthContext)
   const { isMobileSite, isTabletSite, isPcSite } = useContext(MediaQueryContext)
-  const classes = useStyles();
-  const navigate = useNavigate();
+  const classes = useStyles()
+  const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [flashMessage, setFlashMessage] = useState("aaa")
+  const [flashMessage, setFlashMessage] = useState("")
   const location = useLocation()
-  console.log(location)
 
   const handleSignOut = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const res = await signOut()
       if (res.data.success === true) {
-        // サインアウト時には各Cookieを削除
         Cookies.remove("_access_token")
         Cookies.remove("_client")
         Cookies.remove("_uid")
@@ -110,13 +107,11 @@ export default function ButtonAppBar() {
     if(location.state === undefined || location.state === null){
       setFlashMessage("")
     }else{
-      console.log(location.state.flash_message)
       setFlashMessage(location.state.flash_message)
       return(
-        location.state.response = "succeed" ? 
+        location.state.response == "success" ? 
         <FlashMessageStyle response = {location.state.response}> {flashMessage} </FlashMessageStyle> : 
-        <FlashMessageStyle response = {location.state.response}> aaa </FlashMessageStyle>
-        
+        <FlashMessageStyle response = {location.state.response}> {flashMessage} </FlashMessageStyle>
       )
     }
   }
@@ -150,7 +145,7 @@ export default function ButtonAppBar() {
         </AppBar>
       </div>
     </>
-  );
+  )
 }
 
 const SidebarContainerStyle = styled.div`
@@ -162,5 +157,5 @@ const SidebarContainerStyle = styled.div`
 
 const FlashMessageStyle = styled.p`
   font-size: 8px;
-  background-color: ${props => props.response = "success" ? "#7bc890" : "#dc3545" }
+  background-color: ${props => props.response == "success" ? "#7bc890" : "#dc3545" }
 `
