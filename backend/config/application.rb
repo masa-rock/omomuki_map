@@ -10,6 +10,7 @@ module OmomukiMap
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
+    config.i18n.default_locale = :ja
 
     # Configuration for the application, engines, and railties goes here.
     #
@@ -31,7 +32,7 @@ module OmomukiMap
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         # 今回はRailsのポートが3001番、Reactのポートが3000番にするので、Reactのリクエストを許可するためにlocalhost:3000を設定
-        origins 'https://omomuki-map-front.herokuapp.com'
+        origins 'http://localhost:3002'
         resource '*',
                  :headers => :any,
                  # この一文で、渡される、'access-token'、'uid'、'client'というheaders情報を用いてログイン状態を維持する。
