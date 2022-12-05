@@ -2,7 +2,7 @@ import media from "styled-media-query"
 import styled from 'styled-components'
 import axios from 'axios'
 import { useState, useEffect, useContext } from "react"
-import { TagContext } from "../Search"
+import { TagContext } from "../../App"
 
 export const TagSelects = () => {
   const [tags, setTags] = useState([])

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useContext } from "react"
+import React, { useEffect, useState, useMemo, useContext, createContext } from "react"
 import axios from 'axios'
 import { LoadScript, GoogleMap, Marker, InfoWindow } from '@react-google-maps/api'
 import { Select, MenuItem, FormControl, InputLabel, Rating } from "@mui/material"
@@ -8,6 +8,8 @@ import { MediaQueryContext } from './Provider/MediaQueryProvider'
 import media from "styled-media-query"
 import styled from 'styled-components'
 import 'animate.css'
+import { TagSelects } from "./modules/TagButton"
+import { TagContext } from "../App"
 
 export const SearchMapSection = () => {
   const [spots, setSpots] = useState([])
@@ -17,13 +19,14 @@ export const SearchMapSection = () => {
   const [initialLng, setInitialLng] = useState(136.9142007392334)
   const [zoom, setZoom] = useState(9.5)
   const [tags, setTags] = useState([])
-  const [checkedItems, setCheckedItems] = useState([])
   const navigate = useNavigate()
   const {isPcSite} = useContext(MediaQueryContext)
   const {ref, inView} = useInView({
     rootMargin: '-50px',
     triggerOnce: true
   })
+
+  const value = useContext(TagContext)
   
   const initialCenter = {
     lat: initialLat,
@@ -31,7 +34,7 @@ export const SearchMapSection = () => {
   }
   
   const checkedTag = {
-    tags: checkedItems
+    tags: value.checkedItems
   }
 
   const region = {
@@ -54,7 +57,6 @@ export const SearchMapSection = () => {
         console.log(e.response)
       })
   },[])
-  
 
   const StarRating = (props) => {
     const total_review = props.props.length
@@ -71,30 +73,9 @@ export const SearchMapSection = () => {
       </>
     )
   }
-  
-  const checkboxChange = e => {
-    if(checkedItems.includes(e.target.value)){
-      setCheckedItems(checkedItems.filter(item => item !== e.target.value))
-    }else{
-      setCheckedItems([...checkedItems, e.target.value])
-    }
-  }
 
   const ToSinglePage = (id) => {
     navigate(`/spot/${id}`, {id: id})
-  }
-
-  const CheckBox = ({id, value, checked, onChange}) => {
-    return(
-      <input
-      id={id}
-      type="checkbox"
-      name="inputNames"
-      checked={checked}
-      onChange={onChange}
-      value={value}
-    />
-    )
   }
   
   const MarkerMap = () =>{
@@ -147,7 +128,7 @@ export const SearchMapSection = () => {
       .catch( e => {
         console.log(e.response)
       })
-    },[checkedItems])
+    },[value.checkedItems])
 
   const mapContainerSize = () => {
     if(isPcSite){
@@ -199,21 +180,7 @@ export const SearchMapSection = () => {
           <SearchMapTag>
             <h5>タグで絞り込む</h5>
             <div className = "check-box-buttons">
-            {tags?.map((val) => {
-              return(
-                <CheckBoxButton className = "check-box-button" id = {val.id} checkedItems = {checkedItems}>
-                  <label htmlFor = {`search_map_tag_id_${val.id}`} key = {`search_map_tag_key_${val.id}`} className = {"checkbox_cover_parent_component"}>
-                    <CheckBox
-                      id = {`search_map_tag_id_${val.id}`}
-                      value = {val.id}
-                      onChange = {checkboxChange}
-                      checked = {checkedItems.includes(`${val.id}`)}                      
-                    />
-                    {val.name}
-                  </label>
-                </CheckBoxButton>
-              )
-            })}
+            <TagSelects/>
           </div>
           </SearchMapTag>
         </div>
@@ -221,10 +188,6 @@ export const SearchMapSection = () => {
     </SearchMapContainer>
   )
 }
-
-const Hover = styled.div`
-  margin-left: 20px;
-`
 
 const SearchMapContainer = styled.div`
   background-color: #f4f2ee;
@@ -270,20 +233,5 @@ const SearchMapTag = styled.div`
     font-family: 'Shippori Mincho', serif;
     font-size: 16px;
     text-align: left;
-  }
-`
-
-const CheckBoxButton = styled.div`
-  font-size:16px;
-  cursor: pointer;
-  border:1px solid #3f51b5;
-  border-radius:3px;
-  margin:2px;
-  background-color: ${props => props.checkedItems.includes(String(props.id)) ? '#3f51b5' : '#fff' };
-  color: ${props => props.checkedItems.includes(String(props.id)) ? '#fff' : '#3f51b5' };
-  &:hover{
-    color: #fff;
-    background-color: #3f51b5;
-    transition: 0.5s;
   }
 `
