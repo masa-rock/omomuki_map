@@ -79,12 +79,12 @@ export const AssessmentSection = () => {
           {spots.map((val) => (
             <SwiperSlide onClick={() => ToSinglePage(val.id)}>
               {console.log(val)}                
-              <SwiperTitle>
-                <div>{val.name}</div>
+              <SwiperTop>
+                <SwiperTitle>{val.name}</SwiperTitle>
                 <StarRating
                   props = { val.review }
                 />
-              </SwiperTitle>
+              </SwiperTop>
               <div><DisplayImg img={val.image_url}/></div>
             </SwiperSlide>              
           ))}
@@ -111,10 +111,23 @@ const AssessmentContainerTitle = styled.h5`
   `}
 `
 
-const SwiperTitle = styled.div`
+const SwiperTop = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 30px;
+  ${media.lessThan("small")`
+    display: block
+  `}
+`
+
+const SwiperTitle = styled.div`
+  width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  ${media.lessThan("small")`
+    width: 100%;
+  `}
 `
 
 const SwiperContainer = styled.div`
