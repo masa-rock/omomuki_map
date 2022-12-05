@@ -5,6 +5,7 @@ import { Card, CardMedia } from "@material-ui/core";
 import { AuthContext } from '../App';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import media from "styled-media-query"
 
 export const WantToGo = () => {
   const [post, setPost] = useState([])
@@ -67,9 +68,15 @@ export const WantToGo = () => {
 
 const WantToGoPosts = styled.div`
   background-color: #f5f5f5;
-  width: calc(100% - 200px);  
+  width: calc(100% - 200px);
+  ${media.lessThan("medium")`
+    width: 100%;
+  `}
   &&& h4{
     font-family: 'Shippori Mincho', serif;
     font-size: 30px;
+    ${media.lessThan("medium")`
+      font-size: 24px;
+    `}
   }
 `
