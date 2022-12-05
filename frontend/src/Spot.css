@@ -31,7 +31,7 @@
   width: 30%;
 }
 
-@media (max-width: 767px){
+@media screen and (max-width: 767px){
   .review-container img{
     width: 100%;        
   }
@@ -58,6 +58,16 @@
 
 .want-to-go-right-text{
   padding: 10px;
+}
+
+@media screen and (max-width: 480px){
+  .want-to-go-card{
+    display: block;
+  }
+
+  .want-to-go-card img{
+    width: 100%;
+  }
 }
 
 .want-to-go-right-text p{
