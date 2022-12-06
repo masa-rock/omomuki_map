@@ -1,21 +1,19 @@
-import styled from 'styled-components';
-import { TextField, Card } from "@material-ui/core";
-import { Typography, CardMedia, Rating } from "@mui/material";
-import Button from '@material-ui/core/Button';
-import { useState, useMemo, useContext } from "react";
-import { useModal } from 'react-hooks-use-modal';
-import { AuthContext } from '../App';
+import styled from 'styled-components'
+import { TextField, Card } from "@material-ui/core"
+import { Typography, CardMedia, Rating } from "@mui/material"
+import Button from '@material-ui/core/Button'
+import { useState, useMemo, useContext } from "react"
+import { useModal } from 'react-hooks-use-modal'
+import { AuthContext } from '../App'
 import { FlagContext } from './SpotSinglePage'
-import client from "../apis/client";
-import { useParams, useNavigate } from 'react-router-dom';
+import client from "../apis/client"
+import { useNavigate } from 'react-router-dom'
 import media from "styled-media-query"
 
 const Review = () => {
-  const {setIsSignedIn, isSignedIn, currentUser, loading} = useContext(AuthContext);  
+  const {isSignedIn, loading} = useContext(AuthContext)  
   const navigate = useNavigate()
-  const value = useContext(FlagContext);
-  const [assessment, setAssessment] = useState()
-  const [error, setError] = useState([])
+  const value = useContext(FlagContext)  
   const [titleBlank, setTitleBlank] = useState(false)
   const [commentBlank, setCommentBlank] = useState(false)
   const [rateBlank, setRateBlank] = useState(false)
@@ -24,20 +22,18 @@ const Review = () => {
     if (!loading){
       if (isSignedIn){
         return(
-          <ModalButton onClick={open}>
+          <ModalButton onClick = {open}>
             投稿する
           </ModalButton>
         )
       } else{
         return(
-          <>
           <p>※レビューを投稿する場合は、ログインしてください</p>
-          </>
         )
       }}
   }
 
-  const [Modal, open, close, isOpen] = useModal('root',{
+  const [Modal, open, isOpen] = useModal('root', {
     preventScroll: true
   })
 
@@ -45,15 +41,14 @@ const Review = () => {
     setTitleBlank(false)
     setCommentBlank(false)
     setRateBlank(false)
-  },[isOpen])
+  }, [isOpen])
 
   const handleSpotRegistration = async(e) => {
-    e.preventDefault();
+    e.preventDefault()
     if(value.title && value.reviewComment && value.star > 0){
-      const params = await generateParams();
+      const params = await generateParams()
       try{
         const data = client.post('reviews', params)
-        console.log(data)
         navigate(-1)
       }catch(e){
         console.log(e)
@@ -78,11 +73,11 @@ const Review = () => {
       }
       reader.readAsDataURL(file)
     }
-    return ;
+    return 
   }
 
   const DisplayImg = (img) =>{
-    const display_img =  img.length != 0 ? img : `${process.env.PUBLIC_URL}/noimg.jpg`
+    const display_img = img.length != 0 ? img : `${process.env.PUBLIC_URL}/noimg.jpg`
     return display_img
 }
 
@@ -112,23 +107,21 @@ const Review = () => {
           <Card className = {"spot-list-card review-container"}>
             <CardMedia
               component = "img"
-              image = { DisplayImg(key.image_url) }
+              image = {DisplayImg(key.image_url)}
               height = "200"
               />
             <ReviewMainContainer>
-                <h3> { key.user.name } </h3>
-              <ReviewMain>
-                <div>
-                  <h3> { key.title } </h3>
-                </div>
-                <ReviewMainRight>
+                <RatingContainer>
                   <Rating 
                     value = {key.rate}
                     precision = {0.1}
                      />
                   <span>{key.rate}</span>
-                </ReviewMainRight>
-              </ReviewMain>
+                </RatingContainer>
+              <ReviewTop>
+                <h3> {key.title} </h3>                
+                <h4> {key.user.name} </h4>
+              </ReviewTop>
               <p>{key.comment}</p>
             </ReviewMainContainer>
           </Card>
@@ -145,9 +138,9 @@ const Review = () => {
           <Assessment>
             <SingleSpotTitle>評価</SingleSpotTitle>
             <Rating
-              value={value.star}              
+              value = {value.star}              
               onChange = {(e) => value.setStar(e.target.value)}
-              precision = { 0.1 }
+              precision = {0.1}
               />
             <TextField
               type = "number"
@@ -157,36 +150,36 @@ const Review = () => {
             />
           </Assessment>              
           <TextField 
-            type="text"
-            id= "title"
+            type = "text"
+            id = "title"
             label = "タイトルを入れてください"
-            name= "title"
-            value= {value.title}
+            name = "title"
+            value = {value.title}
             fullWidth
             variant = "standard"
-            onChange={(e) => value.setTitle(e.target.value)}
+            onChange = {(e) => value.setTitle(e.target.value)}
           />
           <TextField 
-            type="text"
-            id= "review"
-            label= "レビュー内容を入れてください"
-            name= "review"
-            value= { value.reviewComment }
+            type = "text"
+            id = "review"
+            label = "レビュー内容を入れてください"
+            name = "review"
+            value = { value.reviewComment }
             fullWidth
             multiline
             rows = {15}
             variant = "standard"
-            onChange={(e) => value.setReviewComment(e.target.value)}
+            onChange = {(e) => value.setReviewComment(e.target.value)}
           />
-          <Typography variant={"h5"} sx={{ mt: "30px" }}>
+          <Typography variant = {"h5"} sx = {{ mt: "30px" }}>
             画像アップロード
               <input 
-              type="file"
+              type = "file"
               name = "images"
               onChange = {handleImageSelect}
               />
           </Typography>
-          <Button type="submit" variant="contained" color="primary" onClick={(e) => handleSpotRegistration(e)}>
+          <Button type = "submit" variant = "contained" color = "primary" onClick = {(e) => handleSpotRegistration(e)}>
             登録する
           </Button>
         </form>
@@ -196,7 +189,7 @@ const Review = () => {
   )
 }
 
-export default Review;
+export default Review
 
 const ReviewTitleContainer = styled.div`
   display: flex;
@@ -208,9 +201,9 @@ const ReviewTitleContainer = styled.div`
 const SinglePageTitle = styled.h3`
   font-size: 20px;
   text-align: left;
-  `
+`
   
-  const SingleSpotTitle = styled.h3`
+const SingleSpotTitle = styled.h3`
   font-size: 20px;
   text-align: left;
   margin: 10px 0;
@@ -242,15 +235,12 @@ const Assessment = styled.div`
 const ReviewIndex = styled.div`
   width: 80%;
 `
+
 const ReviewMainContainer = styled.div`
   width: 60%;
   margin: 0 auto;
   &&& span{
     text-align: left;
-  }
-  &&& h3{
-    text-align: right;
-    margin: 5px;
   }
   &&& p{
     text-align: left;
@@ -258,29 +248,34 @@ const ReviewMainContainer = styled.div`
   }
   ${media.lessThan("medium")`
     margin: 0;
+    width: 100%;
     &&& h3{
       text-align: left;
-      font-weight: normal;
       font-size: 16px;
     }
   `}
 `
 
-const ReviewMain = styled.div`
-  display: flex;
-  height: 15%;
+const ReviewTop = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: solid 1px #eeece4;
-  &&& div{
-    display: flex;
+  &&& h3{
+    text-align: left;
+    margin: 5px;
+  }
+  &&& h4{
+    text-align: right;
+    margin: 5px;
   }
   ${media.lessThan("medium")`
   display: block;
   `}
 `
 
-const ReviewMainRight = styled.div`
+const RatingContainer = styled.div`
+  dispaly: flex;
+  text-align: right;
   &&& span{
     font-size: 22px;
     padding-left: 5px;
