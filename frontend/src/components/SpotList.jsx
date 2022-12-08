@@ -4,6 +4,7 @@ import { Grid, Card } from "@material-ui/core"
 import { CardMedia, Rating } from "@mui/material"
 import { useNavigate, useLocation } from "react-router-dom"
 import ReactPaginate from 'react-paginate'
+import { Scrollbars } from 'rc-scrollbars'
 import '../Pagination.css'
 import '../Spot.css'
 import styled from 'styled-components'
@@ -16,11 +17,12 @@ export const SpotList = () => {
   const [allTag, setAllTag] = useState([])
   const navigate = useNavigate()
   const location = useLocation()
-  const searchparams = location.state.params
   const [ offset, setOffset ] = useState(0)
   const PER_PAGE = 8
   const noImg = `${process.env.PUBLIC_URL}/noimg.jpg`
-
+  
+  const [searchParams, setSearchParams] = useState(location.state.params)
+  
   const handlePageChange = (data) => {
     let page_number = data['selected']
     setOffset(page_number*PER_PAGE)
@@ -34,33 +36,35 @@ export const SpotList = () => {
     .catch( e => {
       console.log(e.response)
     })
-    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts`, {params: searchparams})
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts`, {params: searchParams})
     .then(resp => {
+      console.log(searchParams)
       setSpots(resp.data.posts)
       setCount(resp.data.posts.length)
-      setKeyword(searchparams.keyword)
-      setTag(searchparams.tags)      
+      setKeyword(searchParams.keyword)
+      setTag(searchParams.tags)      
     })
     .catch( e => {
       console.log(e.response)
     })
-  },[])
+  },[searchParams])
 
   const DisplayImg = (img) =>{
       const display_img =  img.length != 0 ? img : noImg
       return display_img
   }
 
-  const toTagPage = (data) => {
-    navigate(`/spot/list`, {state: {tags: data}})
+  const toTagPage = (tag_id) => {
+    console.log(tag_id)
+    setSearchParams({tags: [`${tag_id}`], keyword: ""})
   }
 
   const ToSinglePage = (id) => {
+    console.log("good")
     navigate(`/spot/${id}`, {id: id})
   }
 
   const StarRating = (props) => {
-    console.log(props)
     const total_review = props.props.length
     const average_review = props.props.reduce((sum, i) => sum + i.rate, 0)/total_review
     const average_review_result = average_review ? average_review : 0
@@ -69,19 +73,18 @@ export const SpotList = () => {
         <Rating
          value={average_review_result}
          precision = {0.1}
-          />
-        <span> { average_review_result.toFixed(2) } </span>
-        <span> ({ total_review }) </span>
+        />
+        <span> {average_review_result.toFixed(2)} </span>
+        <span> ({total_review}) </span>
       </>
     )
   }
 
   const TagDisplay = () => {
-    const tag_names = []    
+    const tag_names = []
+    console.log(tag)
     allTag.map((t) => {
-      console.log(t.id)
-      if( tag.includes(t.id.toString()) ){
-        console.log('goog')
+      if(tag.includes(t.id.toString())){
         tag_names.push(t.name)
       }
     })
@@ -94,32 +97,34 @@ export const SpotList = () => {
     <>
       <h3>spotリスト</h3>
       <p>{keyword ? `キーワード：${keyword}`:``}</p>
-      <p>検索結果：{count}件がヒットしました。</p>      
       <TagDisplay/>
+      <p>検索結果：{count}件がヒットしました。</p>
       <Grid container spacing = {3} sx = {{ m:2 }}>
         {spots.slice(offset, offset + PER_PAGE).map((val) => {
         return(  
           <Grid item sm = {6} md = {3} xs = {12} >
-            <Card onClick={() => ToSinglePage(val.id)} className = {"spot-list-card"}>
-              {console.log(val.tags)}
-              <span>{val.name}</span>
+            <Card className = {"spot-list-card"}>
+              <div class = "spot-list-card-title">{val.name}</div>
               <CardMedia
                 component = "img"
                 image = {DisplayImg(val.image_url)}
                 height = "200"
+                onClick={() => ToSinglePage(val.id)}
               />
               <StarRating props = {val.review}/>
-              <SinglePageTags>
-                {val.tags.map((data) => {                
-                  return(
-                    <CheckBoxButton onClick={() => toTagPage(data.name)}>
-                      {data.name}
-                    </CheckBoxButton>
-                  )
-                })}
-              </SinglePageTags>
+              <Scrollbars autoHeight>
+                <SinglePageTags>
+                  {val.tags.map((data) => {
+                    return(
+                      <CheckBoxButton onClick = {() => toTagPage(data.id)}>
+                        {data.name}
+                      </CheckBoxButton>
+                    )
+                  })}
+                </SinglePageTags>
+              </Scrollbars>
             </Card>
-          </Grid>  
+          </Grid>
         )
         })}
       </Grid>
@@ -141,18 +146,21 @@ export const SpotList = () => {
 }
 
 const SinglePageTags = styled.dd`
-  width: 70%;
   text-align: left;
   display: flex;
+  flex-wrap: wrap;
+  height: 70px;
 `
 const CheckBoxButton = styled.div`
-  font-size:16px;
+  height: 25px;
+  font-size: 16px;
   cursor: pointer;
   color: #3f51b5;
-  border:1px solid #3f51b5;
+  border: 1px solid #3f51b5;
   padding: 5px;
-  border-radius:3px;
-  margin:2px;
+  border-radius: 3px;
+  margin: 2px;
+  z-index: 100;
   &:hover{
     color: #fff;
     background-color: #3f51b5;
