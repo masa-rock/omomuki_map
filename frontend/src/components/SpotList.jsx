@@ -25,7 +25,7 @@ export const SpotList = () => {
   
   const handlePageChange = (data) => {
     let page_number = data['selected']
-    setOffset(page_number*PER_PAGE)
+    setOffset(page_number * PER_PAGE)
   }
 
   useEffect(() => {
@@ -38,29 +38,26 @@ export const SpotList = () => {
     })
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts`, {params: searchParams})
     .then(resp => {
-      console.log(searchParams)
       setSpots(resp.data.posts)
       setCount(resp.data.posts.length)
       setKeyword(searchParams.keyword)
       setTag(searchParams.tags)      
     })
-    .catch( e => {
+    .catch(e => {
       console.log(e.response)
     })
-  },[searchParams])
+  }, [searchParams])
 
   const DisplayImg = (img) =>{
-      const display_img =  img.length != 0 ? img : noImg
+      const display_img = img.length != 0 ? img : noImg
       return display_img
   }
 
   const toTagPage = (tag_id) => {
-    console.log(tag_id)
     setSearchParams({tags: [`${tag_id}`], keyword: ""})
   }
 
   const ToSinglePage = (id) => {
-    console.log("good")
     navigate(`/spot/${id}`, {id: id})
   }
 
@@ -71,7 +68,7 @@ export const SpotList = () => {
     return (
       <>
         <Rating
-         value={average_review_result}
+         value = {average_review_result}
          precision = {0.1}
         />
         <span> {average_review_result.toFixed(2)} </span>
@@ -82,7 +79,6 @@ export const SpotList = () => {
 
   const TagDisplay = () => {
     const tag_names = []
-    console.log(tag)
     allTag.map((t) => {
       if(tag.includes(t.id.toString())){
         tag_names.push(t.name)
@@ -99,17 +95,17 @@ export const SpotList = () => {
       <p>{keyword ? `キーワード：${keyword}`:``}</p>
       <TagDisplay/>
       <p>検索結果：{count}件がヒットしました。</p>
-      <Grid container spacing = {3} sx = {{ m:2 }}>
+      <Grid container spacing = {3} sx = {{m: 2}}>
         {spots.slice(offset, offset + PER_PAGE).map((val) => {
         return(  
-          <Grid item sm = {6} md = {3} xs = {12} >
+          <Grid item sm = {6} md = {3} xs = {12}>
             <Card className = {"spot-list-card"}>
               <div class = "spot-list-card-title">{val.name}</div>
               <CardMedia
                 component = "img"
                 image = {DisplayImg(val.image_url)}
                 height = "200"
-                onClick={() => ToSinglePage(val.id)}
+                onClick = {() => ToSinglePage(val.id)}
               />
               <StarRating props = {val.review}/>
               <Scrollbars autoHeight>
