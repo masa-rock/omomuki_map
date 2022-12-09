@@ -274,7 +274,7 @@ const ReviewTop = styled.div`
 `
 
 const RatingContainer = styled.div`
-  dispaly: flex;
+  dispaly: flex;  
   text-align: right;
   &&& span{
     font-size: 22px;
