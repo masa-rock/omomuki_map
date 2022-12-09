@@ -51,7 +51,7 @@ export const Search = () => {
             />
           </div>
           <p>タグから探す</p>
-          <Scrollbars autoHeight>            
+          <Scrollbars autoHeight>        
             <TagSelects/>            
           </Scrollbars>
           <Button variant="contained" color="primary" onClick={() => SearchSpot()}>
