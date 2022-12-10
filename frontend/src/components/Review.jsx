@@ -134,7 +134,7 @@ const Review = () => {
           { titleBlank ? <ErrorMessage>※タイトルを入力してください</ErrorMessage> : "" }
           { commentBlank ? <ErrorMessage>※コメントを入力してください</ErrorMessage> : "" }
           { rateBlank ? <ErrorMessage>※評価を0以上に設定してください</ErrorMessage> : "" }
-          <SingleSpotTitle>"{value.name}"のレビューを追加する</SingleSpotTitle>
+          <SingleSpotTitle>"{value.post.name}"のレビューを追加する</SingleSpotTitle>
           <Assessment>
             <SingleSpotTitle>評価</SingleSpotTitle>
             <Rating

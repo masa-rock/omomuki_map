@@ -6,10 +6,13 @@
   margin-bottom: 30px;
 }
 
-.spot-list-card span{
+.spot-list-card-title{
   text-align: left;
   font-size: 22px;
   font-weight: bold;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 /* single page */

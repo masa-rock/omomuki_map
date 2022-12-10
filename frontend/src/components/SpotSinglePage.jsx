@@ -16,11 +16,6 @@ export const FlagContext = createContext()
 export const SpotSinglePage = () => {
   const navigate = useNavigate()
   const [post, setPost] = useState("")
-  const [name, setName] = useState()
-  const [address, setAddress ] = useState()
-  const [description, setDescription] = useState()
-  const [stayTime, setStayTime] = useState()
-  const [postId, setPostId] = useState([])
   const [img, setImg] = useState([])
   const [tags, setTags] = useState([])
   const [title, setTitle] = useState()
@@ -50,10 +45,8 @@ export const SpotSinglePage = () => {
     setReviewComment,
     userId,
     post,
-    name,
     images,
     setImages,
-    postId
   }
   
   useEffect(() => {
@@ -61,11 +54,6 @@ export const SpotSinglePage = () => {
     const getSpot = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/${params.id}`)
     const getReviews = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/review_data/${params.id}`)
     setPost(getSpot.data.post)
-    setPostId(getSpot.data.post.id)
-    setName(getSpot.data.post.name)
-    setAddress(getSpot.data.post.address)
-    setDescription(getSpot.data.post.description)
-    setStayTime(getSpot.data.post.stay_time)
     setImg(getSpot.data.post.image_url)
     setTags(getSpot.data.post.tags)
     setUserId(currentUser?.id)
@@ -129,7 +117,7 @@ export const SpotSinglePage = () => {
     }
     return (
       <>
-        {stay_time[stayTime]}
+        {stay_time[post.stayTime]}
       </>
     )
   }
@@ -183,7 +171,7 @@ export const SpotSinglePage = () => {
   return(
     <SinglePageContainer>
       <SingleSpotTitle>
-        {name}
+        {post.name}
         {(isMobileSite || isTabletSite) && (
           <br/>
         )}
@@ -203,7 +191,7 @@ export const SpotSinglePage = () => {
           {currentUser ? <WantToGo/> : <></>}
           <SpotContents>
             <SinglePageSubject>住所</SinglePageSubject>
-            <SinglePageText><p>{address}</p></SinglePageText>
+            <SinglePageText><p>{post.address}</p></SinglePageText>
           </SpotContents>
           <SpotContents>
             <SinglePageSubject>タグ</SinglePageSubject>
@@ -221,9 +209,9 @@ export const SpotSinglePage = () => {
           </SpotContents>
           <SpotContents>
             <SinglePageSubject>場所の説明</SinglePageSubject>
-            <SinglePageText><p>{description}</p></SinglePageText>
+            <SinglePageText><p>{post.description}</p></SinglePageText>
           </SpotContents>
-          <Button onClick={() => dataDelete(postId)}>
+          <Button onClick={() => dataDelete(post.id)}>
             削除
           </Button>
           <Button onClick={() => { navigate(-1) }}>一覧ページに戻る</Button>

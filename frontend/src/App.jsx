@@ -19,13 +19,15 @@ import media from "styled-media-query"
 import { MediaQueryProvider } from './components/Provider/MediaQueryProvider'
 
 export const AuthContext = createContext();
+export const TagContext = createContext();
 
 const App = () => {
   console.log("start")
   const [loading, setLoading] = useState();
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState();
-  console.log(currentUser)
+  const [checkedItems, setCheckedItems] = useState([])
+  
   const handleGetCurrentUser = async () => {
     try{
       const res = await getCurrentUser();
@@ -63,12 +65,12 @@ const App = () => {
         <Header />
           <Routes>          
             <Route path="/" element={
-              <>
+              <TagContext.Provider value = {{checkedItems, setCheckedItems}}>  
                 <ContainerStyle>
                   <Search />
                 </ContainerStyle>
                 <Home />
-              </>
+              </TagContext.Provider>
             } />
             <Route path="/signup" element={
               <ContainerStyle>
@@ -124,7 +126,8 @@ const ContainerStyle = styled.div`
   color: #aeaeae;
   min-height: 100vh;
   ${media.lessThan("large")`
-    padding: 200px 50px ;
+    padding: 150px 50px 0 ;
+    min-height: calc(100vh - 150px);
   `}
 `;
 
