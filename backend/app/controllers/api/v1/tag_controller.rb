@@ -4,11 +4,6 @@ class Api::V1::TagController < ApplicationController
     render json: tags
   end
 
-  def show
-    tag = Tag.find(params[:id])
-    render json: todo
-  end
-
   def create
     tag = Tag.new(tag_params)
     if tag.save
@@ -32,5 +27,4 @@ class Api::V1::TagController < ApplicationController
   def tag_params
     params.permit(:name)
   end
-
 end
