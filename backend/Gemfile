@@ -16,8 +16,8 @@ gem 'mysql2', '~> 0.5.3'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 gem 'devise'
-
 gem 'devise_token_auth'
+gem 'rails-i18n'
 
 gem 'net-smtp'
 gem 'net-imap'
@@ -76,4 +76,6 @@ group :test do
   gem 'selenium-webdriver'
   gem 'factory_bot_rails'
   gem 'database_cleaner'
+  gem 'rubocop', require: false
+  gem 'rubocop', require: false
 end

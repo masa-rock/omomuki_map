@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :post, traits: [:with_tags] do #traitsを指定することで、自動的にwith_tagsを実行する。
+  factory :post, traits: [:with_tags] do
     name {"name"}
     address {"address1"}
     trait :with_tags do
