@@ -12,6 +12,6 @@ class ApplicationController < ActionController::API
     # 新規登録時にnicknameの取得を許可
     devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname])
     # 情報更新時にnicknameの取得を許可
-    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :email])    
+    devise_parameter_sanitizer.permit(:account_update, keys: %i[name email])
   end
 end
