@@ -7,12 +7,12 @@ RSpec.describe Post, type: :model do
   let(:post) { create(:post, name: "name", address: "address") }
   it "spot名がない場合、無効であること" do
     post_not_name.valid?    
-    expect(post_not_name.errors[:name]).to include("can't be blank")
+    expect(post_not_name.errors.full_messages).to include("Nameを入力してください")
   end
 
   it "住所がない場合、無効であること" do
     post_not_address.valid?
-    expect(post_not_address.errors[:address]).to include("can't be blank")
+    expect(post_not_address.errors.full_messages).to include("Addressを入力してください")
   end
 
   it "spot名、住所がある場合、有効であること" do

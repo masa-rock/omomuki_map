@@ -14,19 +14,19 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
     it "タイトルが入力されていない場合、エラーメッセージが帰ってくるか" do
       post api_v1_reviews_url, params: {title: "", comment:"test", rate: 2.0, user_id: review_user.id, post_id: review_post.id, images:{name:""} }
       json = JSON.parse(response.body)
-      expect(json["error_message"][0]).to eq "Title can't be blank"
+      expect(json["error_message"][0]).to eq "Titleを入力してください"
     end
 
     it "コメントが入力されていない場合、エラーメッセージが帰ってくるか" do
       post api_v1_reviews_url, params: {title: "test", comment:"", rate: 2.0, user_id: review_user.id, post_id: review_post.id, images:{name:""} }
       json = JSON.parse(response.body)
-      expect(json["error_message"][0]).to eq "Comment can't be blank"
+      expect(json["error_message"][0]).to eq "Commentを入力してください"
     end
 
     it "タイトルが入力されていない場合、エラーメッセージが帰ってくるか" do
       post api_v1_reviews_url, params: {title: "", comment:"test", rate: 2.0, user_id: review_user.id, post_id: review_post.id, images:{name:""} }
       json = JSON.parse(response.body)
-      expect(json["error_message"][0]).to eq "Title can't be blank"
+      expect(json["error_message"][0]).to eq "Titleを入力してください"
     end
   end
 end
