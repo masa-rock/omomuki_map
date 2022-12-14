@@ -49,6 +49,8 @@ export const WantToGo = () => {
 
   return(
   <div className = 'mypage-container'>
+    {console.log(currentUser)}
+    {console.log(post)}
     <div className = 'sidebar-container'>
       <Sidebar/>
     </div>

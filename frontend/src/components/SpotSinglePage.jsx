@@ -123,15 +123,12 @@ export const SpotSinglePage = () => {
   }
 
   const IconControll = () => {
-    console.log(wantToGoData)
-    console.log(wantToGoUserId)
     const wantToGoParams = {
       user_id: currentUser.id,
       post_id: post.id
     }
     const uid = currentUser.id
     const wantToGoDataId = wantToGoData[0] ? wantToGoData[0].id : ""
-    console.log(wantToGoDataId)
     if (wantToGoUserId.includes(uid)){
       try{
         axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/v1/want_to_goes/${wantToGoDataId}`)
