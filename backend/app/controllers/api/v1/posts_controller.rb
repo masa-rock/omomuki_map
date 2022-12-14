@@ -10,11 +10,11 @@ class Api::V1::PostsController < ApplicationController
       end
     elsif params[:tags]
       tag_params = params[:tags].map(&:to_i)
-      keyword_posts = Post.where('posts.name Like ?', `%#{params[:keyword]}%`).or(Post.where('description Like ?', `%#{params[:keyword]}%`))
+      keyword_posts = Post.where('posts.name Like ?', "%#{params[:keyword]}%").or(Post.where('description Like ?', "%#{params[:keyword]}%"))
       tag_ids = keyword_posts.includes(:tags).where(tags: { id: tag_params }).ids
       @posts = Post.where(id: tag_ids)
     else
-      @posts = Post.includes(:tags).where('posts.name Like ?', `%#{params[:keyword]}%`).or(Post.where('description Like ?', `%#{params[:keyword]}%`))
+      @posts = Post.includes(:tags).where('posts.name Like ?', "%#{params[:keyword]}%").or(Post.where('description Like ?', "%#{params[:keyword]}%"))
     end
     render json: { 'posts' => @posts }, include: %i[review tags], methods: [:image_url]
   end

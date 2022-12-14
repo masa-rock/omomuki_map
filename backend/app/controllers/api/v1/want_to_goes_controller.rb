@@ -6,12 +6,12 @@ class Api::V1::WantToGoesController < ApplicationController
 
   def index
     if params[:user_id]
-      @want_to_goes = WantToGo.includes(:user).where(user_id: params[:user_id])
-      @posts = Post.where(id: @want_to_goes.ids)
+      want_to_goes = WantToGo.includes(:user).where(user_id: params[:user_id])
+      posts = Post.where(id: want_to_goes.ids)
     else
-      @posts = []
+      posts = []
     end
-    render json: { 'posts' => @posts }, include: [:tags], methods: [:image_url]
+    render json: { 'posts' => posts }, include: [:tags], methods: [:image_url]
   end
 
   def destroy
