@@ -1,10 +1,17 @@
-import styled from 'styled-components';
-import about_img from '../images/about-img.jpg';
+import styled from 'styled-components'
+import about_img from '../images/about-img.jpg'
 import media from "styled-media-query"
+import { useInView } from 'react-intersection-observer'
+import 'animate.css'
 
 export const AboutSection = () => {
+  const {ref, inView} = useInView({
+    rootMargin: '-50px',
+    triggerOnce: true
+  })
+
   return(
-    <AboutContainer>
+    <AboutContainer ref = {ref} className = {inView ? "animate__animated animate__fadeInUp" : "opacity_zero"}>
       <AboutRight></AboutRight>
       <AboutLeft>
         <h2>趣mapとは</h2>
@@ -19,6 +26,7 @@ const AboutContainer = styled.div`
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+  animation-duration: 3s;
   ${media.lessThan("medium")`
     display: block;
     padding: 50px;

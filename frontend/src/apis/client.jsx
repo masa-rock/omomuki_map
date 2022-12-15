@@ -1,5 +1,5 @@
 import axios from 'axios'
-import applyCaseMiddleware from 'axios-case-converter';
+import applyCaseMiddleware from 'axios-case-converter'
 
 const options = {
   ignoreHeaders: true,
@@ -7,8 +7,7 @@ const options = {
 
 const client = applyCaseMiddleware(
   axios.create({
-    baseURL: "http://0.0.0.0:3001/api/v1"
-    // headers: { "Accept": "application/json", "Content-Type": "application/json", "Access-control-allow-origin": "*" } 
+    baseURL: `${process.env.REACT_APP_BACKEND_URL}/api/v1`
   }),
   options
 )

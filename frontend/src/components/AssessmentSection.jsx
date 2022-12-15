@@ -1,33 +1,38 @@
-import styled from 'styled-components';
-import {useEffect, useState} from 'react';
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper';
-import { Rating } from "@mui/material";
+import styled from 'styled-components'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from "react-router-dom"
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay } from 'swiper'
+import { Rating } from "@mui/material"
 import noimg from "../images/noimg.jpg"
 import media from "styled-media-query"
-
-import  'swiper/css';
-import  'swiper/css/navigation';
-import  'swiper/css/pagination';
+import { useInView } from 'react-intersection-observer'
+import 'animate.css'
+import  'swiper/css'
+import  'swiper/css/navigation'
+import  'swiper/css/pagination'
 
 export const AssessmentSection = () => {
   const navigate = useNavigate()
   const [spots, setSpots] = useState([])
+  const { ref, inView } = useInView({
+    rootMargin: '-50px',
+    triggerOnce: true
+  })
 
   useEffect(() => {
-    axios.get("http://0.0.0.0:3001/api/v1/posts/assessment")
-    .then(resp =>{
-      setSpots(resp.data);
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/assessment`)
+    .then(resp => {
+      setSpots(resp.data)
     })
     .catch(e => {
-      console.log(e.response);
+      console.log(e.response)
     })    
   },[])
 
-    const DisplayImg = (img) =>{
-      const display_img =  img.img != 0 ? img.img : noimg
+    const DisplayImg = (img) => {
+      const display_img = img.img != 0 ? img.img : noimg
       console.log(img.img)
       return(
         <img src = {display_img} />
@@ -35,63 +40,61 @@ export const AssessmentSection = () => {
     }
 
     const ToSinglePage = (id) => {
-      navigate(`/spot/${id}`,{id: id})
+      navigate(`/spot/${id}`, {id: id})
     }
 
     const StarRating = (props) => {
       console.log(props)
       const total_review = props.props.length
-      const average_review = props.props.reduce((sum, i) => sum + i.rate, 0)/total_review;
+      const average_review = props.props.reduce((sum, i) => sum + i.rate, 0)/total_review
       const average_review_result = average_review ? average_review : 0
       return (
         <div>
           <Rating
-           value={average_review_result}
+           value = {average_review_result}
            precision = {0.1}
             />
-          <span> { average_review_result.toFixed(2) } </span>
-          <span> ({ total_review }) </span>
+          <span> {average_review_result.toFixed(2)} </span>
+          <span> ({total_review}) </span>
         </div>
       )
     }
 
   return(
-    <>
-      <AssessmentContainer>
-        <AssessmentContainerTitle>口コミ人気スポット</AssessmentContainerTitle>
-        <SwiperContainer>
-          <Swiper
-            modules = {[Navigation, Pagination, Autoplay]}
-            navigation
-            autoplay = {{
-              delay:5000
-            }}
-            pagination ={{ 
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-              clickable: true 
-            }}
-          >
-            {spots.map((val) => (
-              <SwiperSlide onClick={() => ToSinglePage(val.id)}>
-                {console.log(val)}                
-                <SwiperTitle>
-                  <div>{val.name}</div>
-                  <StarRating
-                    props = { val.review }
-                  />
-                </SwiperTitle>
-                <div><DisplayImg img={val.image_url}/></div>
-              </SwiperSlide>              
-            ))}
-          </Swiper>
-        </SwiperContainer>
-      </AssessmentContainer>
-    </>
+    <AssessmentContainer ref = {ref} className = {inView ? "animate__animated animate__fadeInUp" : "opacity_zero"}>
+      <AssessmentContainerTitle>口コミ人気スポット</AssessmentContainerTitle>
+      <SwiperContainer>
+        <Swiper
+          modules = {[Navigation, Pagination, Autoplay]}
+          navigation
+          autoplay = {{
+            delay:5000
+          }}
+          pagination = {{ 
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+            clickable: true 
+          }}
+        >
+          {spots.map((val) => (
+            <SwiperSlide onClick = {() => ToSinglePage(val.id)}>   
+              <SwiperTop>
+                <SwiperTitle>{val.name}</SwiperTitle>
+                <StarRating
+                  props = {val.review}
+                />
+              </SwiperTop>
+              <div><DisplayImg img = {val.image_url}/></div>
+            </SwiperSlide>              
+          ))}
+        </Swiper>
+      </SwiperContainer>
+    </AssessmentContainer>
   )
 }
 
 const AssessmentContainer = styled.div`
+  animation-duration: 3s;
   height: 500px;
   max-width: 600px;
   margin: 100px auto;
@@ -107,10 +110,23 @@ const AssessmentContainerTitle = styled.h5`
   `}
 `
 
-const SwiperTitle = styled.div`
+const SwiperTop = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 30px;
+  ${media.lessThan("small")`
+    display: block
+  `}
+`
+
+const SwiperTitle = styled.div`
+  width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  ${media.lessThan("small")`
+    width: 100%;
+  `}
 `
 
 const SwiperContainer = styled.div`

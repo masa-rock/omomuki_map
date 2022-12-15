@@ -1,45 +1,39 @@
-import { useState, useEffect, useContext, createContext } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import axios from 'axios';
-import Button from '@material-ui/core/Button';
-import { AuthContext } from '../App';
-import Review from "./Review";
-import { Rating } from "@mui/material";
-import { ImAirplane } from 'react-icons/im';
-import { IconContext } from "react-icons/lib";
-import { MediaQueryContext } from './Provider/MediaQueryProvider';
+import { useState, useEffect, useContext, createContext } from "react"
+import { useParams, useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
+import axios from 'axios'
+import Button from '@material-ui/core/Button'
+import { AuthContext } from '../App'
+import Review from "./Review"
+import { Rating } from "@mui/material"
+import { ImAirplane } from 'react-icons/im'
+import { IconContext } from "react-icons/lib"
+import { MediaQueryContext } from './Provider/MediaQueryProvider'
 import media from "styled-media-query"
 
-export const FlagContext = createContext();
+export const FlagContext = createContext()
 
 export const SpotSinglePage = () => {
   const navigate = useNavigate()
   const [post, setPost] = useState("")
-  const [name, setName] = useState()
-  const [address, setAddress ] = useState()
-  const [description, setDescription] = useState()
-  const [stayTime, setStayTime] = useState()
-  const [postId, setPostId] = useState([])
   const [img, setImg] = useState([])
   const [tags, setTags] = useState([])
   const [title, setTitle] = useState()
   const [userId, setUserId] = useState()
-  const params = useParams();
+  const params = useParams()
   const [star, setStar] = useState(0)
-  const [images, setImages] = useState({data: "", name: ""});
+  const [images, setImages] = useState({data: "", name: ""})
   const [reviews, setReviews] = useState([])
   const [reviewComment, setReviewComment] = useState()
-  const [iconColor, setIconColor] = useState("#d3d3d3");
-  const { currentUser } = useContext(AuthContext);
+  const [iconColor, setIconColor] = useState("#d3d3d3")
+  const { currentUser } = useContext(AuthContext)
   const [postReview, setPostReview] = useState([])
   const [wantToGoUserId, setWantToGoUserId] = useState([])
   const [wantToGo, setWantToGo] = useState([])
   const [wantToGoData, setWantToGoData] = useState([])
-  const [flag, setFlag] = useState(false);
-  const { isMobileSite, isTabletSite, isPcSite } = useContext(MediaQueryContext)
+  const { isMobileSite, isTabletSite } = useContext(MediaQueryContext)
   const total_review = postReview.length
-  const average_review = total_review ? postReview.reduce((sum, i) => sum + i.rate, 0)/total_review : 0 ;
+  const average_review = total_review ? postReview.reduce((sum, i) => sum + i.rate, 0)/total_review : 0 
   const value = {
     reviews,
     setReviews,
@@ -51,22 +45,15 @@ export const SpotSinglePage = () => {
     setReviewComment,
     userId,
     post,
-    name,
     images,
     setImages,
-    postId
   }
   
   useEffect(() => {
     async function fetchData(){
-    const getSpot = await axios.get(`http://0.0.0.0:3001/api/v1/posts/${params.id}`)
-    const getReviews = await axios.get(`http://0.0.0.0:3001/api/v1/posts/review_data/${params.id}`)
+    const getSpot = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/${params.id}`)
+    const getReviews = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/review_data/${params.id}`)
     setPost(getSpot.data.post)
-    setPostId(getSpot.data.post.id)
-    setName(getSpot.data.post.name)
-    setAddress(getSpot.data.post.address)
-    setDescription(getSpot.data.post.description)
-    setStayTime(getSpot.data.post.stay_time)
     setImg(getSpot.data.post.image_url)
     setTags(getSpot.data.post.tags)
     setUserId(currentUser?.id)
@@ -89,21 +76,21 @@ export const SpotSinglePage = () => {
     }
   },[wantToGoUserId])
 
-  const DisplayImg = () =>{
+  const DisplayImg = () => {
     const display_img =  img.length != 0 ? img : `${process.env.PUBLIC_URL}/noimg.jpg`
     return(
-      <img src = {display_img} />
+      <img src = {display_img}/>
     )
   }
 
   const dataDelete = (delete_id) => {
     if (window.confirm("投稿を削除しますがよろしいでしょうか")){
-      axios.delete(`http://0.0.0.0:3001/api/v1/posts/${delete_id}`)
+      axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts/${delete_id}`)
       .then(
         navigate("/spot/list")
       )
       .catch(e => {
-        console.log(e.response);
+        console.log(e.response)
       })
     }
   }
@@ -122,7 +109,7 @@ export const SpotSinglePage = () => {
   }
 
   const Stay = () => {
-    const stay_time ={
+    const stay_time = {
       "1": "1時間未満",
       "2": "1~2時間",
       "3": "半日",
@@ -130,24 +117,21 @@ export const SpotSinglePage = () => {
     }
     return (
       <>
-        {stay_time[stayTime]}
+        {stay_time[post.stayTime]}
       </>
     )
   }
 
   const IconControll = () => {
-    console.log(wantToGoData)
-    console.log(wantToGoUserId)
     const wantToGoParams = {
       user_id: currentUser.id,
       post_id: post.id
     }
     const uid = currentUser.id
     const wantToGoDataId = wantToGoData[0] ? wantToGoData[0].id : ""
-    console.log(wantToGoDataId)
     if (wantToGoUserId.includes(uid)){
       try{
-        axios.delete(`http://0.0.0.0:3001/api/v1/want_to_goes/${wantToGoDataId}`)
+        axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/v1/want_to_goes/${wantToGoDataId}`)
         setIconColor("#d3d3d3")
         setWantToGoUserId([])
       }catch(e){
@@ -155,7 +139,7 @@ export const SpotSinglePage = () => {
       }
     }else{
       try{
-        axios.post(`http://0.0.0.0:3001/api/v1/want_to_goes`, wantToGoParams)
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/want_to_goes`, wantToGoParams)
         setIconColor("#B2D235")
       }catch(e){
         console.log(e)
@@ -184,27 +168,27 @@ export const SpotSinglePage = () => {
   return(
     <SinglePageContainer>
       <SingleSpotTitle>
-        {name}
+        {post.name}
         {(isMobileSite || isTabletSite) && (
           <br/>
         )}
         <Rating
-         value = { average_review }
-         precision = { 0.1 }
-         readOnly = { true }
+         value = {average_review}
+         precision = {0.1}
+         readOnly = {true}
           />
-        <span> { average_review.toFixed(2) } </span>
-        ({ total_review })
+        <span> {average_review.toFixed(2)} </span>
+        ({total_review})
       </SingleSpotTitle>
       <SinglePageMain>
         <ImageContainer>
           <DisplayImg/>
         </ImageContainer>
         <SinglePageRightContainer>
-          { currentUser ? <WantToGo/> : <></> }
+          {currentUser ? <WantToGo/> : <></>}
           <SpotContents>
             <SinglePageSubject>住所</SinglePageSubject>
-            <SinglePageText><p>{address}</p></SinglePageText>
+            <SinglePageText><p>{post.address}</p></SinglePageText>
           </SpotContents>
           <SpotContents>
             <SinglePageSubject>タグ</SinglePageSubject>
@@ -214,7 +198,7 @@ export const SpotSinglePage = () => {
                   {data.name}
                 </CheckBoxButton>
               )
-            }) }</SinglePageTags>
+            })}</SinglePageTags>
           </SpotContents>
           <SpotContents>
             <SinglePageSubject>滞在時間</SinglePageSubject>
@@ -222,9 +206,9 @@ export const SpotSinglePage = () => {
           </SpotContents>
           <SpotContents>
             <SinglePageSubject>場所の説明</SinglePageSubject>
-            <SinglePageText><p>{description}</p></SinglePageText>
+            <SinglePageText><p>{post.description}</p></SinglePageText>
           </SpotContents>
-          <Button onClick={() => dataDelete(postId)}>
+          <Button onClick={() => dataDelete(post.id)}>
             削除
           </Button>
           <Button onClick={() => { navigate(-1) }}>一覧ページに戻る</Button>
@@ -319,6 +303,7 @@ const SinglePageTags = styled.dd`
   width: 70%;
   text-align: left;
   display: flex;
+  flex-wrap: wrap;
 `
 const CheckBoxButton = styled.div`
   font-size:16px;

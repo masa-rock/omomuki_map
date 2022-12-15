@@ -6,7 +6,7 @@ RSpec.describe Tag, type: :model do
   
   it "タグ名がない場合、無効であること" do
     tag_not_name.valid?
-    expect(tag_not_name.errors[:name]).to include("can't be blank")
+    expect(tag_not_name.errors.full_messages).to include("Nameを入力してください")
   end
 
   it "タグ名がある場合、有効であること" do

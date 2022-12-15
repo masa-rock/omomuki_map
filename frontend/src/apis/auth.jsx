@@ -1,19 +1,17 @@
-import client from "./client";
-import Cookies from "js-cookie";
+import client from "./client"
+import Cookies from "js-cookie"
 
-// サインアップ
 export const signUp = (params) => {
   return client.post("auth", params, {
     withCredentials: true
-  });
-};
+  })
+}
 
-// サインイン
 export const signIn = (params) => {
   return client.post("auth/sign_in", params, {
     withCredentials: true
-  });
-};
+  })
+}
 
 // サインアウト
 export const signOut = () => {
@@ -22,10 +20,9 @@ export const signOut = () => {
       "access-token": Cookies.get("_access_token"),
       "client": Cookies.get("_client"),
       "uid": Cookies.get("_uid"),
-    },
-  });
-};
-
+    }
+  })
+}
 
 // プロフィール編集
 export const editProfile = () =>{
@@ -44,8 +41,8 @@ export const updatePassword = (params) =>{
       "access-token": Cookies.get("_access_token"),
       "client": Cookies.get("_client"),
       "uid": Cookies.get("_uid"),
-    },
-  });
+    }
+  })
 }
 
 // ログインユーザーの取得

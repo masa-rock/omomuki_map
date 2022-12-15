@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
-import axios from 'axios';
-import { Grid, CardHeader, Card } from "@material-ui/core";
-import { CardMedia, Rating } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
-import ReactPaginate from 'react-paginate';
+import { useState, useEffect } from "react"
+import axios from 'axios'
+import { Grid, Card } from "@material-ui/core"
+import { CardMedia, Rating } from "@mui/material"
+import { useNavigate, useLocation } from "react-router-dom"
+import ReactPaginate from 'react-paginate'
+import { Scrollbars } from 'rc-scrollbars'
 import '../Pagination.css'
 import '../Spot.css'
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const SpotList = () => {
   const [spots, setSpots] = useState([])
@@ -16,73 +17,70 @@ export const SpotList = () => {
   const [allTag, setAllTag] = useState([])
   const navigate = useNavigate()
   const location = useLocation()
-  const searchparams = location.state.params
-  const [ offset, setOffset ] = useState(0);
-  const perPage = 8;
+  const [ offset, setOffset ] = useState(0)
+  const PER_PAGE = 8
   const noImg = `${process.env.PUBLIC_URL}/noimg.jpg`
-
+  
+  const [searchParams, setSearchParams] = useState(location.state.params)
+  
   const handlePageChange = (data) => {
-    let page_number = data['selected'];
-    setOffset(page_number*perPage)
+    let page_number = data['selected']
+    setOffset(page_number * PER_PAGE)
   }
 
   useEffect(() => {
-    axios.get("http://0.0.0.0:3001/api/v1/tag")
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/tag`)
     .then(resp => {
       setAllTag(resp.data)
     })
     .catch( e => {
-      console.log(e.response);
+      console.log(e.response)
     })
-    axios.get("http://0.0.0.0:3001/api/v1/posts", {params: searchparams})
+    axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/posts`, {params: searchParams})
     .then(resp => {
-      setSpots(resp.data.posts);
-      setCount(resp.data.posts.length);
-      setKeyword(searchparams.keyword);
-      setTag(searchparams.tags);      
+      setSpots(resp.data.posts)
+      setCount(resp.data.posts.length)
+      setKeyword(searchParams.keyword)
+      setTag(searchParams.tags)      
     })
-    .catch( e => {
-      console.log(e.response);
+    .catch(e => {
+      console.log(e.response)
     })
-  },[])
+  }, [searchParams])
 
   const DisplayImg = (img) =>{
-      console.log(img)
-      const display_img =  img.length != 0 ? img : noImg
+      const display_img = img.length != 0 ? img : noImg
       return display_img
   }
 
-  const toTagPage = (data) => {
-    navigate(`/spot/list`, {state: {tags: data}})
+  const toTagPage = (tag_id) => {
+    setSearchParams({tags: [`${tag_id}`], keyword: ""})
   }
 
   const ToSinglePage = (id) => {
-    navigate(`/spot/${id}`,{id: id})
+    navigate(`/spot/${id}`, {id: id})
   }
 
   const StarRating = (props) => {
-    console.log(props)
     const total_review = props.props.length
-    const average_review = props.props.reduce((sum, i) => sum + i.rate, 0)/total_review;
+    const average_review = props.props.reduce((sum, i) => sum + i.rate, 0)/total_review
     const average_review_result = average_review ? average_review : 0
     return (
       <>
         <Rating
-         value={average_review_result}
+         value = {average_review_result}
          precision = {0.1}
-          />
-        <span> { average_review_result.toFixed(2) } </span>
-        <span> ({ total_review }) </span>
+        />
+        <span> {average_review_result.toFixed(2)} </span>
+        <span> ({total_review}) </span>
       </>
     )
   }
 
   const TagDisplay = () => {
-    const tag_names = []    
+    const tag_names = []
     allTag.map((t) => {
-      console.log(t.id)
-      if( tag.includes(t.id.toString()) ){
-        console.log('goog')
+      if(tag.includes(t.id.toString())){
         tag_names.push(t.name)
       }
     })
@@ -95,72 +93,70 @@ export const SpotList = () => {
     <>
       <h3>spotリスト</h3>
       <p>{keyword ? `キーワード：${keyword}`:``}</p>
-      <p>検索結果：{count}件がヒットしました。</p>      
       <TagDisplay/>
-      <Grid container spacing={3} sx={{ m:2 }}>
-        {spots.slice(offset, offset+ perPage).map((val) => {
+      <p>検索結果：{count}件がヒットしました。</p>
+      <Grid container spacing = {3} sx = {{m: 2}}>
+        {spots.slice(offset, offset + PER_PAGE).map((val) => {
         return(  
-          <Grid item sm={6} md={3} xs={12} >
-            <Card onClick={() => ToSinglePage(val.id)} className = {"spot-list-card"}>
-              {console.log(val.tags)}
-              <span>{ val.name }</span>
+          <Grid item sm = {6} md = {3} xs = {12}>
+            <Card className = {"spot-list-card"}>
+              <div class = "spot-list-card-title">{val.name}</div>
               <CardMedia
-              component = "img"
-              image = { DisplayImg(val.image_url) }
-              height = "200"
+                component = "img"
+                image = {DisplayImg(val.image_url)}
+                height = "200"
+                onClick = {() => ToSinglePage(val.id)}
               />
-              <StarRating props = { val.review }/>
-              <SinglePageTags>{ val.tags.map((data) => {
-              {console.log(data)}
-              return(
-                <CheckBoxButton onClick={() => toTagPage(data.name)}>
-                  {data.name}
-                </CheckBoxButton>
-              )
-            }) }</SinglePageTags>
+              <StarRating props = {val.review}/>
+              <Scrollbars autoHeight>
+                <SinglePageTags>
+                  {val.tags.map((data) => {
+                    return(
+                      <CheckBoxButton onClick = {() => toTagPage(data.id)}>
+                        {data.name}
+                      </CheckBoxButton>
+                    )
+                  })}
+                </SinglePageTags>
+              </Scrollbars>
             </Card>
-          </Grid>  
+          </Grid>
         )
         })}
       </Grid>
       <ReactPaginate
-        previousLabel='<'
-        nextLabel='>'
-        breakLabel='...'
-        pageCount={Math.ceil(spots.length/perPage)}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
-        onPageChange={handlePageChange}
-        containerClassName={ "pagination" }
-        // subContainerClassName={ pagination }
-        previousClassName='page-item' // '<'の親要素(li)のクラス名
-        nextClassName='page-item' //'>'の親要素(li)のクラス名
-        activeClassName={ "active" }
-        // disabledClassName={ pagination_disabled } // 使用不可の「<,>」に着くクラス名
-        // pageClassName='page-item'
-        // pageLinkClassName='page-link'
-        // previousLinkClassName='page-link'  //'<'のリンクのクラス名
-        // nextLinkClassName='page-link'//'>'のリンクのクラス名
-        // breakClassName='page-item' // 上記の「…」のクラス名
-        // breakLinkClassName='page-link' // 「…」の中のリンクにつけるクラス
+        previousLabel = '<'
+        nextLabel = '>'
+        breakLabel = '...'
+        pageCount = {Math.ceil(spots.length/PER_PAGE)}
+        marginPagesDisplayed = {2}
+        pageRangeDisplayed = {5}
+        onPageChange = {handlePageChange}
+        containerClassName = {"pagination"}
+        previousClassName = 'page-item'
+        nextClassName = 'page-item'
+        activeClassName = {"active"}        
       />
     </>
   )
 }
 
 const SinglePageTags = styled.dd`
-  width: 70%;
   text-align: left;
   display: flex;
+  flex-wrap: wrap;
+  height: 70px;
 `
 const CheckBoxButton = styled.div`
-  font-size:16px;
+  height: 25px;
+  font-size: 16px;
   cursor: pointer;
   color: #3f51b5;
-  border:1px solid #3f51b5;
+  border: 1px solid #3f51b5;
   padding: 5px;
-  border-radius:3px;
-  margin:2px;
+  border-radius: 3px;
+  margin: 2px;
+  z-index: 100;
   &:hover{
     color: #fff;
     background-color: #3f51b5;
