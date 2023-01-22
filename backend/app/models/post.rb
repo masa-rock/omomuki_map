@@ -27,4 +27,23 @@ class Post < ApplicationRecord
       @posts = Post.all
     end
   end
+
+  def self.search_keyword_and_tag(keyword, tags)
+    if keyword == '' || keyword.nil?
+      if tags
+        tag_params = tags.map(&:to_i)
+        tag_ids = self.includes(:tags).where(tags: { id: tag_params }).ids
+        @posts = self.where(id: tag_ids)
+      else
+        @posts = self.all
+      end
+    elsif tags
+      tag_params = tags.map(&:to_i)
+      keyword_posts = self.where('posts.name Like ?', "%#{keyword}%").or(self.where('description Like ?', "%#{keyword}%"))
+      tag_ids = keyword_posts.includes(:tags).where(tags: { id: tag_params }).ids
+      @posts = self.where(id: tag_ids)
+    else
+      @posts = self.includes(:tags).where('posts.name Like ?', "%#{keyword}%").or(self.where('description Like ?', "%#{keyword}%"))
+    end
+  end
 end
