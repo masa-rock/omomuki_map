@@ -1,22 +1,8 @@
 class Api::V1::PostsController < ApplicationController
   def index
-    if params[:keyword] == '' || params[:keyword].nil?
-      if params[:tags]
-        tag_params = params[:tags].map(&:to_i)
-        tag_ids = Post.includes(:tags).where(tags: { id: tag_params }).ids
-        @posts = Post.where(id: tag_ids)
-      else
-        @posts = Post.all
-      end
-    elsif params[:tags]
-      tag_params = params[:tags].map(&:to_i)
-      keyword_posts = Post.where('posts.name Like ?', "%#{params[:keyword]}%").or(Post.where('description Like ?', "%#{params[:keyword]}%"))
-      tag_ids = keyword_posts.includes(:tags).where(tags: { id: tag_params }).ids
-      @posts = Post.where(id: tag_ids)
-    else
-      @posts = Post.includes(:tags).where('posts.name Like ?', "%#{params[:keyword]}%").or(Post.where('description Like ?', "%#{params[:keyword]}%"))
-    end
-    render json: { 'posts' => @posts }, include: %i[review tags], methods: [:image_url]
+    @posts = Post.search_keyword_and_tag(params[:keyword], params[:tags]).includes([:review, :tags]).with_attached_images
+    counter = @posts.size
+    render json: {"posts" => @posts}, include: [:review, :tags], methods: [:image_url]
   end
 
   def show
@@ -55,11 +41,11 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def assessment
-    @posts = Post.includes(:review).all.each do |post|
+    @posts = Post.includes(:review).with_attached_images.all.each do |post|
       post.average = post.average_score
     end
 
-    posts = @posts.sort_by { |post| -post.average }[0, 5]
+    posts = @posts.sort_by{ |post| -post.average }[0, 5]
     render json: posts, include: [:review], methods: [:image_url]
   end
 

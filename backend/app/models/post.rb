@@ -14,17 +14,22 @@ class Post < ApplicationRecord
     images.attached? ? url_for(images[0]) : []
   end
 
-  def average_score
-    review.length.zero? ? 0 : review.sum(:rate) / review.length
-  end
-
-  def search_tag
-    if params[:tags]
-      tag_params = params[:tags].map(&:to_i)
-      tag_ids = Post.includes(:tags).where(tags: { id: tag_params }).ids
-      @posts = Post.where(id: tag_ids)
+  def self.search_keyword_and_tag(keyword, tags)
+    if keyword == '' || keyword.nil?
+      if tags
+        tag_params = tags.map(&:to_i)
+        tag_ids = self.includes(:tags).where(tags: { id: tag_params }).ids
+        @posts = self.where(id: tag_ids)
+      else
+        @posts = self.all
+      end
+    elsif tags
+      tag_params = tags.map(&:to_i)
+      keyword_posts = self.where('posts.name Like ?', "%#{keyword}%").or(self.where('description Like ?', "%#{keyword}%"))
+      tag_ids = keyword_posts.includes(:tags).where(tags: { id: tag_params }).ids
+      @posts = self.where(id: tag_ids)
     else
-      @posts = Post.all
+      @posts = self.includes(:tags).where('posts.name Like ?', "%#{keyword}%").or(self.where('description Like ?', "%#{keyword}%"))
     end
   end
 end
