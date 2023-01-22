@@ -7,44 +7,36 @@ class Api::V1::PostsController < ApplicationController
 
   def show
     post = Post.find(params[:id])
-    post_reviews = Review.includes(:post).where(post:{id: post.id})
-    total_reviews = post_reviews.sum{|hash| hash[:rate]}
-    render json: {"post" => post}, include: [:review, :tags, :want_to_goes], methods: [:image_url]
+    render json: { 'post' => post }, include: %i[review tags want_to_goes], methods: [:image_url]
   end
 
   def create
     post = Post.new(post_params)
-    error_message = ""
+    error_message = ''
     if Post.where(name: params[:name], address: params[:address]).count >= 1
-      error_message = "スポット名もしくは住所はすでに登録されています。"
-      render json: {"post" => post, "error_message" => error_message}, methods: [:image_url] and return
+      error_message = 'スポット名もしくは住所はすでに登録されています。'
+      render json: { 'post' => post, 'error_message' => error_message }, methods: [:image_url] and return
     end
-    if not params[:images][:name] == ""
+    if params[:images][:name] != ''
       blob = ActiveStorage::Blob.create_and_upload!(
-        io: StringIO.new(decode(params[:images][:data]) + "\n"),
+        io: StringIO.new(decode(params[:images][:data])),
         filename: params[:images][:name]
       )
       post.images.attach(blob)
-      post.save
-      render json: {"post" => post, "error_message" => error_message}, methods: [:image_url]
-    else
-      post.save
-      render json: {"post" => post, "error_message" => error_message}, methods: [:image_url]
     end
+    post.save
+    render json: { 'post' => post, 'error_message' => error_message }
   end
 
   def destroy
     post = Post.find(params[:id])
     tag_posts = TagPost.where(post_id: post.id)
-    tag_posts.each do |tp|
-      tp.destroy
-    end
+    tag_posts.map(&:destroy)
     post.destroy
   end
 
   def post_review
-    post = Post.find(params[:id])
-    reviews = Review.includes(:post).where(post: {id: params[:id]})
+    reviews = Review.includes(:post).where(post: { id: params[:id] })
     render json: reviews, include: [:user], methods: [:image_url]
   end
 
@@ -53,11 +45,12 @@ class Api::V1::PostsController < ApplicationController
       post.average = post.average_score
     end
 
-    posts = @posts.sort_by{ |post| -post.average }[0,5]    
+    posts = @posts.sort_by{ |post| -post.average }[0, 5]
     render json: posts, include: [:review], methods: [:image_url]
   end
 
   private
+
   def post_params
     params.permit(:name, :address, :business_hours_start, :business_hours_end, :fee, :eat_walk, :stay_time, :description, :lat, :lng, tag_ids: [])
   end

@@ -14,20 +14,6 @@ class Post < ApplicationRecord
     images.attached? ? url_for(images[0]) : []
   end
 
-  def average_score
-    review.length.zero? ? 0 : review.sum(:rate) / review.length
-  end
-
-  def search_tag
-    if params[:tags]
-      tag_params = params[:tags].map(&:to_i)
-      tag_ids = Post.includes(:tags).where(tags: { id: tag_params }).ids
-      @posts = Post.where(id: tag_ids)
-    else
-      @posts = Post.all
-    end
-  end
-
   def self.search_keyword_and_tag(keyword, tags)
     if keyword == '' || keyword.nil?
       if tags
